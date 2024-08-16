@@ -288,9 +288,10 @@ public struct VBSoundDevice: Identifiable, Hashable, Codable {
 /// Describes a Mac VM with its associated hardware configuration.
 /// **Read the note at the top of this file before modifying this**
 public struct VBMacDevice: Hashable, Codable {
-    public init(cpuCount: Int, memorySize: UInt64, pointingDevice: VBPointingDevice, keyboardDevice: VBKeyboardDevice, displayDevices: [VBDisplayDevice], networkDevices: [VBNetworkDevice], soundDevices: [VBSoundDevice], storageDevices: [VBStorageDevice], NVRAM: [VBNVRAMVariable] = [VBNVRAMVariable]()) {
+    public init(cpuCount: Int, memorySize: UInt64, productionMode: Bool = true, pointingDevice: VBPointingDevice, keyboardDevice: VBKeyboardDevice, displayDevices: [VBDisplayDevice], networkDevices: [VBNetworkDevice], soundDevices: [VBSoundDevice], storageDevices: [VBStorageDevice], NVRAM: [VBNVRAMVariable] = [VBNVRAMVariable]()) {
         self.cpuCount = cpuCount
         self.memorySize = memorySize
+        self.productionMode = productionMode
         self.pointingDevice = pointingDevice
         self.keyboardDevice = keyboardDevice
         self.displayDevices = displayDevices
@@ -302,6 +303,8 @@ public struct VBMacDevice: Hashable, Codable {
     
     public var cpuCount: Int
     public var memorySize: UInt64
+    @DecodableDefault.True
+    public var productionMode = true
     public var pointingDevice: VBPointingDevice
     @DecodableDefault.EmptyPlaceholder
     public var keyboardDevice: VBKeyboardDevice

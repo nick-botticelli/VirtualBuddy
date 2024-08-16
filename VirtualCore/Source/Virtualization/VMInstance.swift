@@ -81,6 +81,8 @@ public final class VMInstance: NSObject, ObservableObject {
 
         macPlatform.machineIdentifier = try model.fetchOrGenerateMachineIdentifier()
 
+        macPlatform._isProductionModeEnabled = model.configuration.hardware.productionMode
+
         return macPlatform
     }
 

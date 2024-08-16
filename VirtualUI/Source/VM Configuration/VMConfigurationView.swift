@@ -39,6 +39,9 @@ struct VMConfigurationView: View {
     @AppStorage("config.sharing.collapsed")
     private var sharingCollapsed = true
 
+    @AppStorage("config.advanced.collapsed")
+    private var advancedCollapsed = true
+
     private var systemType: VBGuestType { viewModel.config.systemType }
 
     private var showBootDiskSection: Bool { viewModel.context == .preInstall }
@@ -50,7 +53,9 @@ struct VMConfigurationView: View {
     private var showDisplayPPISelection: Bool { systemType.supportsDisplayPPI }
     
     private var showRosettaMountSelection: Bool { systemType.supportsRosettaMount }
-    
+
+    private var showAdvancedSection: Bool { viewModel.context == .preInstall }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             if showBootDiskSection {
@@ -77,6 +82,10 @@ struct VMConfigurationView: View {
 
             sharing
                 .frame(minWidth: 0, idealWidth: VMConfigurationSheet.defaultWidth)
+
+            if showAdvancedSection {
+                advanced
+            }
         }
         .font(.system(size: 12))
     }
@@ -247,6 +256,19 @@ struct VMConfigurationView: View {
                 "Sharing",
                 systemImage: "folder",
                 summary: viewModel.config.sharingSummary
+            )
+        }
+    }
+
+    @ViewBuilder
+    private var advanced: some View {
+        ConfigurationSection($advancedCollapsed) {
+            AdvancedConfigurationView(hardware: $viewModel.config.hardware)
+        } header: {
+            summaryHeader(
+                "Advanced",
+                systemImage: "gearshape.2",
+                summary: viewModel.config.generalSummary
             )
         }
     }

@@ -91,7 +91,7 @@ public final class VMController: ObservableObject {
     
     @Published
     public private(set) var state = State.idle
-    
+
     private(set) var virtualMachine: VZVirtualMachine?
 
     @Published
