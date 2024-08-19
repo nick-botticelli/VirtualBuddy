@@ -131,6 +131,9 @@ public final class VMInstance: NSObject, ObservableObject {
         if #available(macOS 15.0, *) {
             c.usbControllers = helper.createUSBControllers()
         }
+        if model.configuration.hardware.gdbStub.enabled {
+            c._debugStub = helper.createGDBStub()
+        }
 
         let bootDevice = try await helper.createBootBlockDevice()
         let additionalBlockDevices = try await helper.createAdditionalBlockDevices()

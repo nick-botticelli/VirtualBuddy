@@ -63,9 +63,19 @@ __attribute__((weak_import))
 
 @end
 
+@interface _VZGDBDebugStubConfiguration: NSObject <NSCopying>
+
+- (id)init;
+- (id)initWithPort:(unsigned short)port;
+- (id)makeDebugStubForVirtualMachine:(id)machine;
+- (id)makeDebugStubForCoprocessor;
+
+@end
+
 @interface VZVirtualMachineConfiguration (Private)
 
 @property (strong, setter=_setMultiTouchDevices:) NSArray <_VZMultiTouchDeviceConfiguration *> *_multiTouchDevices;
+@property (strong, setter=_setDebugStub:) _VZGDBDebugStubConfiguration *_debugStub;
 
 @end
 

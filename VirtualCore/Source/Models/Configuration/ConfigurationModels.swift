@@ -285,10 +285,25 @@ public struct VBSoundDevice: Identifiable, Hashable, Codable {
     public var enableInput = true
 }
 
+/// Configures GDB debug stub.
+/// **Read the note at the top of this file before modifying this**
+public struct VBGDBStub: Identifiable, Hashable, Codable, ProvidesEmptyPlaceholder {
+    public init() {
+    }
+
+    public var id = UUID()
+    public var name = "VM GDB Stub" // TODO: Coprocessor GDB Stub
+    public var enabled = false
+
+    public var port = 8000
+
+    public static var empty: VBGDBStub { VBGDBStub() }
+}
+
 /// Describes a Mac VM with its associated hardware configuration.
 /// **Read the note at the top of this file before modifying this**
 public struct VBMacDevice: Hashable, Codable {
-    public init(cpuCount: Int, memorySize: UInt64, productionMode: Bool = true, pointingDevice: VBPointingDevice, keyboardDevice: VBKeyboardDevice, displayDevices: [VBDisplayDevice], networkDevices: [VBNetworkDevice], soundDevices: [VBSoundDevice], storageDevices: [VBStorageDevice], NVRAM: [VBNVRAMVariable] = [VBNVRAMVariable]()) {
+    public init(cpuCount: Int, memorySize: UInt64, productionMode: Bool = true, pointingDevice: VBPointingDevice, keyboardDevice: VBKeyboardDevice, displayDevices: [VBDisplayDevice], networkDevices: [VBNetworkDevice], soundDevices: [VBSoundDevice], storageDevices: [VBStorageDevice], gdbStub: VBGDBStub = VBGDBStub(), NVRAM: [VBNVRAMVariable] = [VBNVRAMVariable]()) {
         self.cpuCount = cpuCount
         self.memorySize = memorySize
         self.productionMode = productionMode
@@ -299,6 +314,7 @@ public struct VBMacDevice: Hashable, Codable {
         self.soundDevices = soundDevices
         self.storageDevices = storageDevices
         self.NVRAM = NVRAM
+        self.gdbStub = gdbStub
     }
     
     public var cpuCount: Int
@@ -311,6 +327,8 @@ public struct VBMacDevice: Hashable, Codable {
     public var displayDevices: [VBDisplayDevice]
     public var networkDevices: [VBNetworkDevice]
     public var soundDevices: [VBSoundDevice]
+    @DecodableDefault.EmptyPlaceholder
+    public var gdbStub: VBGDBStub
     public var NVRAM = [VBNVRAMVariable]()
     
     public var storageDevices: [VBStorageDevice] {
@@ -466,7 +484,8 @@ public extension VBMacDevice {
             displayDevices: [.default],
             networkDevices: [.default],
             soundDevices: [.default],
-            storageDevices: [.defaultBootDevice]
+            storageDevices: [.defaultBootDevice],
+            gdbStub: .default
         )
     }
 }
@@ -523,6 +542,10 @@ public extension VBDisplayDevice {
             pixelsPerInch: reference.pixelsPerInch
         )
     }
+}
+
+public extension VBGDBStub {
+    static var `default`: VBGDBStub { .init() }
 }
 
 // MARK: - Presets
@@ -652,6 +675,16 @@ public extension VBDisplayDevice {
         minimumDisplayPPI...maximumDisplayPPI
     }()
 
+}
+
+public extension VBGDBStub {
+    static let minimumGdbPort = 1024
+
+    static let maximumGdbPort = 65535
+
+    static let gdbPortRange: ClosedRange<Int> = {
+        minimumGdbPort...maximumGdbPort
+    }()
 }
 
 extension Int {

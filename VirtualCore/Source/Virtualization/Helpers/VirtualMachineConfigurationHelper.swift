@@ -21,6 +21,7 @@ protocol VirtualMachineConfigurationHelper {
     func createSpiceAgentConsoleDeviceConfiguration() -> VZVirtioConsoleDeviceConfiguration?
     @available(macOS 15.0, *)
     func createUSBControllers() -> [VZUSBControllerConfiguration]
+    func createGDBStub() -> _VZGDBDebugStubConfiguration
 }
 
 func createVZDiskImageStorageDeviceAttachment(url: URL, readOnly: Bool, guestType: VBGuestType) throws -> VZDiskImageStorageDeviceAttachment {
@@ -73,6 +74,9 @@ extension VirtualMachineConfigurationHelper {
     @available(macOS 15.0, *)
     func createUSBControllers() -> [VZUSBControllerConfiguration] { [] }
 
+    func createGDBStub() -> _VZGDBDebugStubConfiguration {
+        _VZGDBDebugStubConfiguration(port: UInt16(vm.configuration.hardware.gdbStub.port))
+    }
 }
 
 extension VBVirtualMachine {
