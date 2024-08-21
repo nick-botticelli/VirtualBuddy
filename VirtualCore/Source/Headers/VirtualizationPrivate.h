@@ -63,7 +63,10 @@ __attribute__((weak_import))
 
 @end
 
-@interface _VZGDBDebugStubConfiguration: NSObject <NSCopying>
+@interface _VZDebugStubConfiguration: NSObject <NSCopying>
+@end
+
+@interface _VZGDBDebugStubConfiguration : _VZDebugStubConfiguration
 
 - (id)init;
 - (id)initWithPort:(unsigned short)port;
@@ -72,10 +75,69 @@ __attribute__((weak_import))
 
 @end
 
+@interface _VZAcceleratorDeviceConfiguration: NSObject <NSCopying>
+@end
+
+@interface _VZMacNeuralEngineDeviceConfiguration: _VZAcceleratorDeviceConfiguration
+
+- (id)init;
+
+@property (nonatomic, assign, setter=_setSignatureMismatchAllowed:) BOOL _signatureMismatchAllowed;
+
+@end
+
+@interface _VZMacScalerAcceleratorDeviceConfiguration : _VZAcceleratorDeviceConfiguration
+
+- (id)init;
+
+@end
+
+@interface _VZMacVideoToolboxDeviceConfiguration: _VZAcceleratorDeviceConfiguration
+
+- (id)init;
+
+@end
+
+@interface _VZBiometricDeviceConfiguration: NSObject <NSCopying>
+@end
+
+@interface _VZMacTouchIDDeviceConfiguration: _VZBiometricDeviceConfiguration
+
+- (id)init;
+
+@end
+
+@interface _VZSEPStorage : NSObject <NSCopying>
+
+@property (readonly, copy) NSURL *URL;
+
+- (id)initWithURL:(id)url;
+- (id)initCreatingStorageAtURL:(id)url error:(_Nullable id *_Nullable)error;
+
+@end
+
+@interface _VZCoprocessorConfiguration: NSObject <NSCopying>
+@end
+
+@interface _VZSEPCoprocessorConfiguration: _VZCoprocessorConfiguration
+
+@property (copy, setter=setRomBinaryURL:) NSURL *romBinaryURL;
+@property (readonly, copy) _VZSEPStorage *storage;
+@property (copy, setter=setDebugStub:) _VZDebugStubConfiguration *debugStub;
+
+- (id)initWithStorage:(id)storage;
+- (id)initWithStorageURL:(id)url;
+
+@end
+
 @interface VZVirtualMachineConfiguration (Private)
 
 @property (strong, setter=_setMultiTouchDevices:) NSArray <_VZMultiTouchDeviceConfiguration *> *_multiTouchDevices;
 @property (strong, setter=_setDebugStub:) _VZGDBDebugStubConfiguration *_debugStub;
+@property (strong, setter=_setAcceleratorDevices:) NSArray <_VZAcceleratorDeviceConfiguration *> *_acceleratorDevices;
+@property (strong, setter=_setBiometricDevices:) NSArray <_VZBiometricDeviceConfiguration *> *_biometricDevices;
+@property (strong, setter=_setCoprocessors:) NSArray <_VZCoprocessorConfiguration *> *_coprocessors;
+
 
 @end
 

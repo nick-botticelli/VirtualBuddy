@@ -135,6 +135,20 @@ public final class VMInstance: NSObject, ObservableObject {
             c._debugStub = helper.createGDBStub()
         }
 
+        // TODO: Remove this (start)
+        let neuralEngineDevice = _VZMacNeuralEngineDeviceConfiguration()
+        let videoToolboxDevice = _VZMacVideoToolboxDeviceConfiguration()
+        c._acceleratorDevices = [neuralEngineDevice, videoToolboxDevice]
+
+        c._biometricDevices = [_VZMacTouchIDDeviceConfiguration()]
+
+        let sepStoragePath = model.bundleURL.appendingPathComponent("SEPStorage")
+        let sepStorage = _VZSEPStorage(creatingStorageAtURL: sepStoragePath, error: nil)
+        let sepDevice: _VZSEPCoprocessorConfiguration = _VZSEPCoprocessorConfiguration(storage: sepStorage)
+        sepDevice.debugStub = _VZGDBDebugStubConfiguration(port: 8001)
+        c._coprocessors = [sepDevice]
+        // TODO: Remove this (end)
+
         let bootDevice = try await helper.createBootBlockDevice()
         let additionalBlockDevices = try await helper.createAdditionalBlockDevices()
 
