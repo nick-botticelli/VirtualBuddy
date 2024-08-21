@@ -63,7 +63,10 @@ __attribute__((weak_import))
 
 @end
 
-@interface _VZGDBDebugStubConfiguration: NSObject <NSCopying>
+@interface _VZDebugStubConfiguration: NSObject <NSCopying>
+@end
+
+@interface _VZGDBDebugStubConfiguration : _VZDebugStubConfiguration
 
 - (id)init;
 - (id)initWithPort:(unsigned short)port;
